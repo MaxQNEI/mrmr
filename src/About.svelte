@@ -8,10 +8,10 @@
 <Article>
     <br>
 
-    <p>{TXT.AboutText[0]}</p>
-    <p>{TXT.AboutText[1]}</p>
-    <p>{TXT.AboutText[2]}</p>
-    <p>{TXT.AboutText[3]}</p>
+    <p>{@html TXT.AboutText[0]}</p>
+    <p>{@html TXT.AboutText[1]}</p>
+    <p>{@html TXT.AboutText[2]}</p>
+    <p>{@html TXT.AboutText[3]}</p>
 
     <div>
         <p>{TXT.Command}:</p>
