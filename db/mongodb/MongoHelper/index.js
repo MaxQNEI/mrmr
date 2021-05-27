@@ -20,6 +20,7 @@ module.exports = class MongoHelper {
             })
             .catch((err) => {
                 console.debug('[Error] MongoHelper->Connect():', err);
+                throw err;
             });
     }
 

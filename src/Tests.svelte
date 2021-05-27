@@ -10,7 +10,6 @@
     import Article from "./components/Article.svelte";
     import Message from "./components/Message.svelte";
 
-    import Network from "./components/Network.svelte";
     import Breadcrumbs from "./components/Breadcrumbs.svelte";
     import PunctList from "./components/PunctList.svelte";
     import Quiz from "./components/Quiz.svelte";
@@ -118,19 +117,6 @@
     // $: Question && console.debug(Question.AnswerList);
     // $: console.debug(QuestionList);
 </script>
-
-<Network>
-    <h3>HI!</h3>
-    <!-- <div>
-        {TXT.Participates}: {NetworkInfo && NetworkInfo.Participates !== undefined ? NetworkInfo.Participates : 0} /
-        <button class="link" on:click={Participate}>{TXT.Participate}</button>
-    </div>
-
-    <div>
-        {TXT.Serves}: {NetworkInfo && NetworkInfo.Serves !== undefined ? NetworkInfo.Serves : 0} /
-        <button class="link" on:click={Serve}>{TXT.Serve}</button>
-    </div> -->
-</Network>
 
 <Article>
     <Breadcrumbs />

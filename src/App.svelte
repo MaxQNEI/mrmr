@@ -3,6 +3,8 @@
 
     import Header from "./Header.svelte";
     import Container from "./Container.svelte";
+
+    import Network from "./components/Network.svelte";
 </script>
 
 <Router>
@@ -10,6 +12,8 @@
         <Header />
         <Container />
     </div>
+
+    <Network />
 </Router>
 
 <style>

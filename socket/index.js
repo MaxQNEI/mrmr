@@ -21,6 +21,7 @@ Mongo
         console.debug('Connect successfully to Mongo!');
         console.debug(`Socket listening at ${Config.Socket.host}:${Config.Socket.port}`);
     })
+    .catch(error => console.error('Error while connection to Mongo:', error.message))
     .then(() => {
         SocketController();
     });
@@ -146,6 +147,10 @@ function SocketController() {
     function PunctOut(punct) {
         if (punct instanceof Array) {
             return punct.map(v => PunctOut(v));
+        }
+
+        if (!punct) {
+            return punct;
         }
 
         const { UUID, Key, Punct, Title } = punct;

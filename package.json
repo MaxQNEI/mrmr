@@ -8,7 +8,7 @@
     "start": "sirv public --single --ignores \"socket.io\"",
     "parse:vodiy.ua": "node --trace-warnings scripts/parse-vodiy.ua.js",
     "parse:pdd.ua": "node --trace-warnings scripts/pdd.ua.js",
-    "mongo": "mongod --config mongod.conf",
+    "mongo": "mongod --config mongod.conf --verbose",
     "socket": "nodemon socket/index.js --watch socket/*"
   },
   "devDependencies": {

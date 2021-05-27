@@ -4,8 +4,14 @@ import { io } from 'socket.io-client';
 export const Socket = readable(io());
 export const Connected = readable(false, set => {
     Socket.subscribe(Socket => {
-        Socket.on('connect', () => set(true));
-        Socket.on('disconnect', () => set(false));
+        Socket.on('connect', () => {
+            console.debug('OnSocketConnect()');
+            set(true);
+        });
+        Socket.on('disconnect', () => {
+            console.debug('OnSocketDisconnect()');
+            set(false);
+        });
     });
 });
 
