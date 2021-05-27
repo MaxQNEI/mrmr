@@ -55,11 +55,6 @@ const LogStamp = (function () {
     };
 })();
 
-// for(let i = 0; i < 255; i++) {
-//     console.debug(`${i} \x1b[${i}mTEXT\x1b[0m`);
-// }
-// return;
-
 new (class ParseController {
     fetchDelay = 0; // ms
     fetchList = [];
