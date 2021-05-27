@@ -135,9 +135,9 @@
 
         let h, m, s;
 
-        time -= h = Math.floor(time / HourMS);
-        time -= m = Math.floor(time / MinuteMS);
-        time -= s = Math.floor(time / SecondMS);
+        time -= (h = Math.max(0, Math.floor(time / HourMS))) * HourMS;
+        time -= (m = Math.max(0, Math.floor(time / MinuteMS))) * MinuteMS;
+        time -= (s = Math.max(0, Math.floor(time / SecondMS))) * SecondMS;
 
         return format
             .replace(/h/g, h.toString().padStart(2, "0"))
