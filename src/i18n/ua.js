@@ -39,4 +39,6 @@ export default {
     WatchLeft: 'Залишилось',
     WatchSpent: 'Минуло',
     Restart: 'Запустити знову',
+
+    Connecting: 'З\'єднання',
 };

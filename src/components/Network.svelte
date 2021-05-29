@@ -1,9 +1,18 @@
 <script>
     import { Connected } from "../stores";
+    import TXT from "../i18n/ua";
 
     let Open = false;
-    $: Open = (!$Connected ? false : Open);
+    $: Open = !$Connected ? false : Open;
 </script>
+
+<div class={"overlay" + ($Connected ? " connected" : "")}>
+    <div>
+        <h1>
+            {TXT.Connecting}...
+        </h1>
+    </div>
+</div>
 
 <div class={"network" + (Open ? " opened" : "")}>
     <div class="content">
@@ -16,6 +25,30 @@
 </div>
 
 <style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: center / contain no-repeat #ffffff url("/static/connecting.svg");
+
+        transition: all 1000ms ease, width 0ms, height 0ms;
+    }
+    .overlay.connected {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        transition: all 1000ms ease 300ms, width 0ms 1300ms, height 0ms 1300ms;
+    }
+
     .network {
         position: fixed;
         z-index: 100;
@@ -56,7 +89,6 @@
         display: grid;
         grid-gap: 8px;
         padding: 8px;
-        /* border-radius: 4px; */
         box-shadow: 0 0 10px #999999;
         background-color: rgba(255, 255, 255, 0.8);
     }

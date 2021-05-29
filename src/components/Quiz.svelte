@@ -187,6 +187,16 @@
                 onSelect={onAnswerSelect}
                 {onShowReply}
             />
+
+            {#if Question.list[Question.index + 1]}
+                <QuestionItem
+                    {TXT}
+                    index={Question.index + 1}
+                    list={Question.list}
+                    question={Question.list[Question.index + 1]}
+                    blank={true}
+                />
+            {/if}
         {:else if Quiz.complete}
             <div class="complete">
                 <div>

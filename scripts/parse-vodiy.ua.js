@@ -83,9 +83,11 @@ new (class ParseController {
             .then(() => {
                 console.debug(LogStamp(), `\x1b[1;95mGettings Puncts\x1b[0m ...`);
 
-                return this.fetch(SourceList.ThemeList, {}).then((result) => {
-                    return result;
-                });
+                return this
+                    .fetch(SourceList.ThemeList, {})
+                    .then((result) => {
+                        return result;
+                    });
             })
             .then(({ res, url }) => {
                 console.debug(LogStamp(), `\x1b[1;95mParsing Puncts\x1b[0m ...`);

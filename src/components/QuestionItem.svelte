@@ -4,18 +4,30 @@
     export let index;
     export let question;
     export let onSelect = () => {};
-    export let onShowReply;
+    export let onShowReply = () => {};
     export let complete = false;
+    export let blank = false;
+
+    const qText = (text) => {
+        if (blank) {
+            return text.replace(/[^ ]/g, "?");
+        }
+
+        return text;
+    };
 </script>
 
-<div class={"question" + (question.Picture ? " with-picture" : "")}>
+<div class={"question" + (question.Picture ? " with-picture" : "") + (blank ? " blank" : "")}>
     <div class="info">
         {TXT.Question}: {index + 1} / {list.length}
     </div>
 
     {#if question.Picture}
         <div class="question-picture">
-            <img src={question.Picture} alt="" />
+            <div>
+                {#if blank}<div class="blank" />{/if}
+                <img src={question.Picture} alt="" />
+            </div>
         </div>
     {:else}
         <div class="question-no-picture">
@@ -24,7 +36,7 @@
     {/if}
 
     <div class="question-answer-list">
-        <h3 class="question-text">{question.Text}</h3>
+        <h3 class="question-text">{qText(question.Text)}</h3>
 
         {#each question.AnswerList as Answer}
             {#if complete}
@@ -37,7 +49,7 @@
                 </button>
             {:else}
                 <button class="question-answer-item" on:click={onSelect.bind(null, Answer)}>
-                    {Answer.Text}
+                    {qText(Answer.Text)}
                 </button>
             {/if}
         {/each}
@@ -91,6 +103,7 @@
     }
     .question-picture img {
         max-height: 60vh;
+        opacity: 1;
     }
 
     .question-no-picture {
@@ -128,6 +141,19 @@
     }
     .btn-show-reply:hover {
         opacity: 0.8;
+    }
+
+    .question.blank {
+        opacity: 0.5;
+    }
+    .question.blank .question-picture > div {
+        background-color: lightgray;
+    }
+    .question.blank .question-picture img {
+        opacity: 0;
+    }
+    .question.blank .reply-block {
+        opacity: 0;
     }
 
     @media (max-width: 480px) {
