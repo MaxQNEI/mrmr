@@ -6,6 +6,7 @@ const App = HTTP.createServer();
 const IO = require('socket.io')(App, {});
 
 const Mongo = new MongoHelper({ ...Config.Mongo });
+const { Mongo: { Collection: Collections } } = Config;
 
 const State = {
     Network: {
@@ -34,6 +35,7 @@ function SocketController() {
         Socket.on('get-punct-list', OnSocketGetPunctList);
         Socket.on('get-punct-info', OnSocketGetPunctInfo);
         Socket.on('get-question-list', OnSocketGetQuestionList);
+        Socket.on('get-question-stats', OnSocketGetQuestionStats);
         Socket.on('get-answer-correct', OnSocketGetAnswerCorrect);
         Socket.on('network-logout', OnSocketNetworkLogout);
         Socket.on('network-serve', OnSocketNetworkServe);
@@ -47,7 +49,7 @@ function SocketController() {
         function OnSocketGetPunctList() {
             console.debug(`OnSocketGetPunctList()`);
 
-            Mongo.Find(Config.Mongo.Collection.PunctList, {})
+            Mongo.Find(Collections.PunctList, {})
                 .then((list) => {
                     Socket.emit('set-punct-list', PunctOut(list));
                 });
@@ -56,7 +58,7 @@ function SocketController() {
         function OnSocketGetPunctInfo({ Punct: Key }) {
             console.debug(`OnSocketGetPunctList()`, Key);
 
-            Mongo.Find(Config.Mongo.Collection.PunctList, { Key })
+            Mongo.Find(Collections.PunctList, { Key })
                 .then((list) => {
                     Socket.emit('set-punct-info', PunctOut(list[0]));
                 });
@@ -68,7 +70,7 @@ function SocketController() {
             switch (type) {
                 case 'Punct':
                     Mongo
-                        .Find(Config.Mongo.Collection.QuestionList, { PunctKey: key })
+                        .Find(Collections.QuestionList, { PunctKey: key })
                         .then(questionList => {
                             Socket.emit('set-question-list', ArrayRandomize(questionList.map(QuestionOut)));
                         });
@@ -76,7 +78,7 @@ function SocketController() {
 
                 case 'Random':
                     Mongo
-                        .Find(Config.Mongo.Collection.QuestionList, {})
+                        .Find(Collections.QuestionList, {})
                         .then(questionList => {
                             Socket.emit('set-question-list', ArrayRandomize(questionList.map(QuestionOut).slice(0, count)));
                         });
@@ -85,7 +87,7 @@ function SocketController() {
                 default:
                 case 'All':
                     Mongo
-                        .Find(Config.Mongo.Collection.QuestionList, {})
+                        .Find(Collections.QuestionList, {})
                         .then(list => {
                             list = ArrayRandomize(list);
                             (type === 'random' && count) && (list = list.slice(0, count));
@@ -95,16 +97,49 @@ function SocketController() {
             }
         }
 
+        function OnSocketGetQuestionStats(questionUUID) {
+            return GetQuestionStats(questionUUID).then(stats => {
+                IO.emit(`set-question-stats-${questionUUID}`, stats);
+            });
+        }
+
         function OnSocketGetAnswerCorrect(questionUUID, answerUUID) {
             console.debug(`OnSocketGetAnswerCorrect(): ${questionUUID} -> ${answerUUID}`);
 
             Mongo
-                .Find(Config.Mongo.Collection.QuestionList, { UUID: questionUUID })
+                .Find(Collections.QuestionList, { UUID: questionUUID })
                 .then(([question]) => {
                     const correctUUID = question.AnswerList.filter(answer => answer.isCorrect)[0].UUID;
                     const incorrectUUID = (correctUUID && correctUUID !== answerUUID ? answerUUID : null);
 
                     Socket.emit('set-answer-correct', correctUUID, incorrectUUID);
+
+                    return Mongo
+                        .Insert(Collections.QuestionStats, [{
+                            time: Date.now(),
+                            questionUUID,
+                            answerUUID,
+                            isCorrect: !incorrectUUID,
+                        }])
+                        .then(() => {
+                            return { questionUUID }
+                        });
+                })
+                .then(({ questionUUID }) => {
+                    /* Mongo
+                        .Find(Collections.QuestionStats, { questionUUID })
+                        .then((docs) => {
+                            let Correct = 0, Incorrect = 0;
+                            docs.forEach(({ isCorrect }) => {
+                                if (isCorrect) { Correct++ }
+                                else { Incorrect++; }
+                            });
+                            IO.emit(`set-question-stats-${questionUUID}`, { Correct, Incorrect });
+                        }); */
+
+                    return GetQuestionStats(questionUUID).then(stats => {
+                        IO.emit(`set-question-stats-${questionUUID}`, stats);
+                    });
                 });
         }
 
@@ -227,5 +262,15 @@ function SocketController() {
                 ...count,
             });
         }
+    }
+
+    function GetQuestionStats(questionUUID) {
+        return Promise.all([
+            Mongo.Count(Collections.QuestionStats, { questionUUID, isCorrect: true }),
+            Mongo.Count(Collections.QuestionStats, { questionUUID, isCorrect: false }),
+        ]).then(results => {
+            const [Correct, Incorrect] = results;
+            return { Correct, Incorrect };
+        });
     }
 }

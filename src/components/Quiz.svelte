@@ -174,36 +174,27 @@
 
 <div class="question-wrap">
     <div class="question-list">
-        {#each Question.list.slice(0, Question.index) as question, i}
-            <QuestionItem {TXT} index={i} list={Question.list} {question} {onShowReply} complete={true} />
-        {/each}
-
-        {#if !Quiz.complete && Question.current}
-            <QuestionItem
-                {TXT}
-                index={Question.index}
-                list={Question.list}
-                question={Question.current}
-                onSelect={onAnswerSelect}
-                {onShowReply}
-            />
-
-            {#if Question.list[Question.index + 1]}
+        {#each Question.list as question, i}
+            {#if i <= Question.index}
                 <QuestionItem
-                    {TXT}
-                    index={Question.index + 1}
+                    index={i}
                     list={Question.list}
-                    question={Question.list[Question.index + 1]}
-                    blank={true}
+                    {question}
+                    {onShowReply}
+                    {onAnswerSelect}
+                    isCurrenct={i === Question.index}
+                    isComplete={i < Question.index}
                 />
             {/if}
-        {:else if Quiz.complete}
+        {/each}
+
+        {#if Quiz.complete}
             <div class="complete">
                 <div>
-                    {#if Result.incorrect < 2}
-                        <img src="/static/checked-yellowgreen.svg" alt="" />
-                    {:else}
+                    {#if Result.incorrect > 2}
                         <img src="/static/close-tomato.svg" alt="" />
+                    {:else}
+                        <img src="/static/checked-yellowgreen.svg" alt="" />
                     {/if}
                 </div>
 
@@ -218,7 +209,7 @@
 </div>
 
 {#if Quiz}
-    <div class={`float-status${Quiz ? " show" : ""}`}>
+    <div class="float-status" class:show={Quiz}>
         {#if Quiz}
             <div>
                 {[
@@ -227,9 +218,6 @@
                 ]
                     .filter((v) => v)
                     .join(" / ")}
-
-                <!-- | -->
-                <!-- <button class="link" on:click={Restart}>{TXT.Restart}</button> -->
             </div>
         {:else}
             &nbsp;
@@ -240,12 +228,13 @@
 <style>
     .question-wrap {
         padding: 4px 0;
+        padding-bottom: 48px;
     }
 
     .question-list {
         display: grid;
-        grid-gap: 32px;
-        padding: 16px 0;
+        grid-gap: 48px;
+        /* padding: 16px 0; */
     }
 
     .complete {
@@ -255,7 +244,7 @@
         justify-content: center;
         align-items: center;
         padding: 16px;
-        box-shadow: 0 0 5px #999999;
+        /* box-shadow: 0 0 5px #999999; */
         background-color: #ffffff;
     }
     .complete img {

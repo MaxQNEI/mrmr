@@ -41,4 +41,6 @@ export default {
     Restart: 'Запустити знову',
 
     Connecting: 'З\'єднання',
+
+    AnswerStatistics: 'Статистика відповідей',
 };

@@ -58,4 +58,10 @@ module.exports = class MongoHelper {
             .filter(filter)
             .toArray();
     }
+
+    Count(collectionName = '', query = {}, options = {}) {
+        return this
+            .Collection(collectionName)
+            .countDocuments(query, options);
+    }
 }

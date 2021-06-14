@@ -9,6 +9,7 @@ module.exports = {
             PunctList: 'PunctList',
             TicketList: 'TicketList',
             QuestionList: 'QuestionList',
+            QuestionStats: 'QuestionStats',
         },
     },
 };

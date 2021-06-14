@@ -1,5 +1,5 @@
 <script>
-    import { Socket, Connected } from "../stores";
+    import { Socket } from "../stores";
     import { BreadcrumbsItems } from "../stores";
     import { useNavigate } from "svelte-navigator";
 

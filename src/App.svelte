@@ -5,6 +5,7 @@
     import Container from "./Container.svelte";
 
     import Network from "./components/Network.svelte";
+    // import Listener from "./components/Listener.svelte";
 </script>
 
 <Router>
@@ -14,6 +15,7 @@
     </div>
 
     <Network />
+    <!-- <Listener /> -->
 </Router>
 
 <style>
