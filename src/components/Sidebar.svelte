@@ -1,7 +1,7 @@
 <script>
     import { useNavigate } from "svelte-navigator";
-    import { ShowSidebar } from "./stores";
-    import TXT from "./i18n/ua";
+    import { ShowSidebar } from "../stores";
+    import TXT from "../i18n/ua";
 
     import Header from "./Header.svelte";
 
@@ -29,6 +29,8 @@
                 </div>
             </div>
 
+            <div class="separator" />
+
             <div class="menu-item" component="button" on:click={nav.bind(null, "/tests")}>
                 <img class="fill" src="/static/fill-1x1.svg" alt="" />
 
@@ -38,11 +40,42 @@
                 </div>
             </div>
 
+            <div class="separator" />
+
+            <div class="menu-item" component="button" on:click={nav.bind(null, "/policy")}>
+                <img class="fill" src="/static/fill-1x1.svg" alt="" />
+
+                <div class="menu-item-content">
+                    <div class="menu-item-icon" style="background-image: url('/static/policy.svg');" />
+                    <div class="menu-item-text">{TXT.Policy}</div>
+                </div>
+            </div>
+
+            <div class="menu-item smaller onhover" component="button" on:click={nav.bind(null, "/policy/privacy")}>
+                <img class="fill" src="/static/fill-1x1.svg" alt="" />
+
+                <div class="menu-item-content">
+                    <div class="menu-item-icon" style="background-image: url('/static/policy-privacy.svg');" />
+                    <div class="menu-item-text">{TXT.PolicyPrivacy}</div>
+                </div>
+            </div>
+
+            <div class="menu-item smaller onhover" component="button" on:click={nav.bind(null, "/policy/terms-of-use")}>
+                <img class="fill" src="/static/fill-1x1.svg" alt="" />
+
+                <div class="menu-item-content">
+                    <div class="menu-item-icon" style="background-image: url('/static/policy-terms-of-use.svg');" />
+                    <div class="menu-item-text">{TXT.PolicyTermsOfUse}</div>
+                </div>
+            </div>
+
+            <div class="separator" />
+
             <div class="menu-item" component="button" on:click={nav.bind(null, "/about")}>
                 <img class="fill" src="/static/fill-1x1.svg" alt="" />
 
                 <div class="menu-item-content">
-                    <div class="menu-item-icon" style="background-image: url('/static/information-sign.svg');" />
+                    <div class="menu-item-icon" style="background-image: url('/static/about.svg');" />
                     <div class="menu-item-text">{TXT.About}</div>
                 </div>
             </div>
@@ -79,6 +112,15 @@
         display: none;
     }
 
+    .separator {
+        height: 0;
+        margin: 0 16px;
+        background-color: #ffffff;
+    }
+    .sidebar:hover .separator {
+        height: 1px;
+    }
+
     .footer {
         position: sticky;
         bottom: 0;
@@ -111,6 +153,11 @@
         transition: all 300ms ease;
     }
 
+    .sidebar:hover .onhover {
+        max-height: 50px;
+        transform: scale(1);
+    }
+
     /* menu-item.active, */
     .menu-item:hover::before {
         width: 4px;
@@ -129,7 +176,12 @@
         display: block;
         width: 50px;
         height: 50px;
-        background: center / 80% no-repeat;
+        background: center / contain no-repeat;
+        transform-origin: center;
+        transform: scale(0.8);
+    }
+    .menu-item.smaller .menu-item-icon {
+        height: 25px;
     }
 
     .footer {
@@ -169,10 +221,10 @@
         }
 
         .sidebar:hover {
-            width: 250px;
+            width: 300px;
         }
 
-        .sidebar:hover .menu-item {
+        .sidebar:hover .menu-item-content {
             padding: 8px 16px;
         }
 
@@ -198,6 +250,11 @@
         .sidebar:hover .menu-item-text,
         .sidebar:hover .footer {
             transition-delay: 0ms;
+        }
+
+        .onhover {
+            max-height: 0px;
+            transform: scale(0);
         }
     }
 
@@ -244,14 +301,8 @@
             position: static;
         }
 
-        .menu {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
         .menu .fill {
-            display: block;
-            width: 100%;
+            display: none;
         }
 
         .menu-item {
@@ -265,25 +316,14 @@
         }
 
         .menu-item-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
             width: 100%;
             height: 100%;
-
-            display: grid;
-            grid-gap: 8px;
-            grid-auto-flow: unset;
-            grid-template-columns: unset;
-            justify-content: center;
-            align-content: center;
+            padding: 8px 16px;
         }
 
         .menu-item-icon {
-            width: 20vw;
-            height: 20vw;
+            width: 40px;
+            height: 40px;
         }
 
         .menu-item-text {

@@ -1,13 +1,13 @@
 <script>
 </script>
 
-<article>
+<div class="article">
     <slot />
-</article>
+</div>
 
 <style>
-    article {
+    .article {
         display: grid;
-        grid-gap: 16px;
+        grid-gap: 8px;
     }
 </style>

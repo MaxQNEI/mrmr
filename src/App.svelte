@@ -1,7 +1,7 @@
 <script>
     import { Router } from "svelte-navigator";
 
-    import Header from "./Header.svelte";
+    import Header from "./components/Header.svelte";
     import Container from "./Container.svelte";
 
     import Network from "./components/Network.svelte";

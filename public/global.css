@@ -24,7 +24,8 @@ body {
     color: #333;
 }
 
-img, svg {
+img,
+svg {
     display: block;
     max-width: 100%;
 }
@@ -63,10 +64,10 @@ button {
     font: inherit;
 }
 button:hover {
-    opacity: .8;
+    opacity: 0.8;
 }
 
-button.link {
+.link {
     padding: 0;
     border: none;
     background: none;
@@ -74,7 +75,18 @@ button.link {
     cursor: pointer;
 }
 
-button:disabled, button:hover:disabled {
+button:disabled,
+button:hover:disabled {
     opacity: 1;
+    background-color: #cccccc;
     cursor: not-allowed;
+}
+
+ul,
+ol {
+    display: grid;
+    grid-gap: 8px;
+}
+li {
+    list-style-position: inside;
 }

@@ -1,6 +1,6 @@
 <script>
     import { useNavigate } from "svelte-navigator";
-    import { Title, ShowSidebar } from "./stores.js";
+    import { Title, ShowSidebar } from "../stores.js";
 
     const navigate = useNavigate();
 </script>

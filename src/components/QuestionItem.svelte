@@ -9,7 +9,6 @@
     export let question;
     export let onAnswerSelect = () => {};
     export let onShowReply = () => {};
-    export let isCurrent = false;
     export let isComplete = false;
 
     let Stats = {
@@ -19,7 +18,6 @@
 
     onMount(() => {
         $Socket.on(`set-question-stats-${question.UUID}`, (stats) => {
-            console.debug(">>>", stats);
             Stats = { ...Stats, ...stats };
             Stats.CorrectPercent = Stats.Correct / (Stats.Correct + Stats.Incorrect);
             Stats.IncorrectPercent = 1 - Stats.CorrectPercent;
@@ -82,10 +80,10 @@
             <span>|</span>
             <span>
                 {TXT.AnswerStatistics}: <span class="info-correct">{Stats.Correct}</span>
-                (<span class="info-correct">{(Stats.CorrectPercent * 100).toFixed(2)}%</span>)
+                (<span class="info-correct">{(Stats.CorrectPercent * 100).toFixed(0)}%</span>)
                 <span>~</span>
                 <span class="info-incorrect">{Stats.Incorrect}</span>
-                (<span class="info-incorrect">{(Stats.IncorrectPercent * 100).toFixed(2)}%</span>)
+                (<span class="info-incorrect">{(Stats.IncorrectPercent * 100).toFixed(0)}%</span>)
             </span>
         {/if}
     </div>

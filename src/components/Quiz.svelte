@@ -1,7 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    // import { navigate } from "svelte-navigator";
-    import { Socket, Connected } from "../stores";
+    import { Socket } from "../stores";
     import { BreadcrumbsItems } from "../stores";
     import TXT from "../i18n/ua";
 
@@ -182,7 +181,6 @@
                     {question}
                     {onShowReply}
                     {onAnswerSelect}
-                    isCurrenct={i === Question.index}
                     isComplete={i < Question.index}
                 />
             {/if}

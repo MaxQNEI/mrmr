@@ -33,6 +33,7 @@ function SocketController() {
 
         Socket.on('disconnect', OnSocketDisconnect);
         Socket.on('get-punct-list', OnSocketGetPunctList);
+        Socket.on('get-punct-stats', OnSocketGetPunctStats);
         Socket.on('get-punct-info', OnSocketGetPunctInfo);
         Socket.on('get-question-list', OnSocketGetQuestionList);
         Socket.on('get-question-stats', OnSocketGetQuestionStats);
@@ -43,22 +44,70 @@ function SocketController() {
 
         function OnSocketDisconnect(reason) {
             console.debug(`OnSocketDisconnect(): #${Socket.id} - ${reason}`);
+
             LeaveNetworkPunct(Socket);
         };
 
         function OnSocketGetPunctList() {
             console.debug(`OnSocketGetPunctList()`);
 
-            Mongo.Find(Collections.PunctList, {})
+            Mongo
+                .Find(Collections.PunctList, {})
                 .then((list) => {
                     Socket.emit('set-punct-list', PunctOut(list));
+                });
+        }
+
+        function OnSocketGetPunctStats() {
+            console.debug(`OnSocketGetPunctStats()`);
+
+            Mongo
+                .Find(Collections.PunctList, {})
+                .then((list) => {
+                    return Promise
+                        .all(list.map(({ UUID: punctUUID, QuestionNumberList }) => {
+                            return Mongo
+                                .Find(Collections.QuestionList, { Number: { $in: QuestionNumberList } })
+                                .then(questionList => {
+                                    return {
+                                        punctUUID,
+                                        questionsUUID: questionList.map(({ UUID: questionUUID }) => {
+                                            return questionUUID;
+                                        })
+                                    };
+                                });
+                        }))
+                        .then(results => {
+                            return Promise
+                                .all(results.map(({ punctUUID, questionsUUID }) => {
+                                    return Mongo
+                                        .Find(Collections.QuestionStats, { questionUUID: { $in: questionsUUID } })
+                                        .then((list) => {
+                                            if (!list.length) {
+                                                return null;
+                                            }
+
+                                            let correct = 0, incorrect = 0;
+                                            list.forEach(({ isCorrect }) => (isCorrect ? correct++ : incorrect++));
+                                            return { punctUUID, ratio: correct / ((correct + incorrect) || 1) };
+                                        });
+                                }))
+                                .then(results => {
+                                    const stats = {};
+                                    results.filter(v => v).forEach(({ punctUUID, ratio }) => {
+                                        stats[punctUUID] = { ratio };
+                                    });
+                                    Socket.emit('set-punct-stats', stats);
+                                });
+                        });
                 });
         }
 
         function OnSocketGetPunctInfo({ Punct: Key }) {
             console.debug(`OnSocketGetPunctList()`, Key);
 
-            Mongo.Find(Collections.PunctList, { Key })
+            Mongo
+                .Find(Collections.PunctList, { Key })
                 .then((list) => {
                     Socket.emit('set-punct-info', PunctOut(list[0]));
                 });
@@ -103,8 +152,8 @@ function SocketController() {
             });
         }
 
-        function OnSocketGetAnswerCorrect(questionUUID, answerUUID) {
-            console.debug(`OnSocketGetAnswerCorrect(): ${questionUUID} -> ${answerUUID}`);
+        function OnSocketGetAnswerCorrect(questionUUID, answerUUID, punctUUID) {
+            console.debug(`OnSocketGetAnswerCorrect(): ${punctUUID} / ${questionUUID} -> ${answerUUID}`);
 
             Mongo
                 .Find(Collections.QuestionList, { UUID: questionUUID })
@@ -126,17 +175,6 @@ function SocketController() {
                         });
                 })
                 .then(({ questionUUID }) => {
-                    /* Mongo
-                        .Find(Collections.QuestionStats, { questionUUID })
-                        .then((docs) => {
-                            let Correct = 0, Incorrect = 0;
-                            docs.forEach(({ isCorrect }) => {
-                                if (isCorrect) { Correct++ }
-                                else { Incorrect++; }
-                            });
-                            IO.emit(`set-question-stats-${questionUUID}`, { Correct, Incorrect });
-                        }); */
-
                     return GetQuestionStats(questionUUID).then(stats => {
                         IO.emit(`set-question-stats-${questionUUID}`, stats);
                     });

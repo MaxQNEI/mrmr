@@ -3,6 +3,9 @@ export default {
     Tests: 'Тести',
     About: 'Про Нас',
     Support: 'Підтримка',
+    Policy: 'Політика',
+    PolicyPrivacy: 'Політика конфіденційності',
+    PolicyTermsOfUse: 'Умови користування',
 
     AboutText: [
         'Ми є деяка кількість любителів-розробників.',
@@ -43,4 +46,9 @@ export default {
     Connecting: 'З\'єднання',
 
     AnswerStatistics: 'Статистика відповідей',
+
+    CheckAll: 'Відмітити все',
+    UncheckAll: 'Зняти все',
+    Default: 'За замовчуванням',
+    Run: 'Запустити',
 };

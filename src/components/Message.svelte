@@ -1,5 +1,5 @@
 <script>
-    export let bg = 'white';
+    export let bg = "white";
 </script>
 
 <div class="category-message" style="background-color: {bg};">
@@ -9,6 +9,6 @@
 <style>
     .category-message {
         padding: 16px;
-        box-shadow: 0 0 15px #666666;
+        box-shadow: 0 0 15px #cccccc;
     }
 </style>

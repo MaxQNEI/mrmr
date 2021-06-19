@@ -1,12 +1,13 @@
 <script>
     import { Route } from "svelte-navigator";
 
-    import Sidebar from "./Sidebar.svelte";
+    import Sidebar from "./components/Sidebar.svelte";
 
     import Home from "./Home.svelte";
     import Tests from "./Tests.svelte";
     import About from "./About.svelte";
     import Support from "./Support.svelte";
+    import Policy from "./Policy.svelte";
 </script>
 
 <div class="container">
@@ -27,6 +28,10 @@
 
         <Route path="/support" primary={false}>
             <Support />
+        </Route>
+
+        <Route path="/policy/*" primary={false}>
+            <Policy />
         </Route>
     </div>
 </div>
